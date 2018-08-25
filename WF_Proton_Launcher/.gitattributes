@@ -1,0 +1,2 @@
+libcurl.dll filter=lfs diff=lfs merge=lfs -text
+libcurl.lib filter=lfs diff=lfs merge=lfs -text

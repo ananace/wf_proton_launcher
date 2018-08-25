@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\LZMA">
+      <UniqueIdentifier>{86592c15-9592-4c6d-b489-a6ba6fc0d423}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -21,12 +24,51 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Hashlist.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MD5.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DispatchQueue.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WF_Proton_Launcher.cpp">
+    <ClCompile Include="Hashlist.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MD5.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="lzma\7zAlloc.c">
+      <Filter>Source Files\LZMA</Filter>
+    </ClCompile>
+    <ClCompile Include="lzma\Alloc.c">
+      <Filter>Source Files\LZMA</Filter>
+    </ClCompile>
+    <ClCompile Include="lzma\LzFind.c">
+      <Filter>Source Files\LZMA</Filter>
+    </ClCompile>
+    <ClCompile Include="lzma\LzFindMt.c">
+      <Filter>Source Files\LZMA</Filter>
+    </ClCompile>
+    <ClCompile Include="lzma\LzmaDec.c">
+      <Filter>Source Files\LZMA</Filter>
+    </ClCompile>
+    <ClCompile Include="lzma\LzmaEnc.c">
+      <Filter>Source Files\LZMA</Filter>
+    </ClCompile>
+    <ClCompile Include="lzma\LzmaLib.c">
+      <Filter>Source Files\LZMA</Filter>
+    </ClCompile>
+    <ClCompile Include="DispatchQueue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
