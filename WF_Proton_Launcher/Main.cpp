@@ -30,6 +30,9 @@ const std::string CONTENT_HOST = "content.warframe.com";
 
 const std::string INDEX_PATH = "/index.txt.lzma";
 
+const std::string WARFRAME_EXE = "Warframe.exe";
+const std::string WARFRAME_64_EXE = "Warframe.x64.exe";
+
 static const size_t UNDERFLOW_BUFSIZE = 1024 * 16;
 static const size_t DECOMPRESS_BUFSIZE = 1024 * 256;
 
@@ -98,6 +101,8 @@ int main(int argc, char** argv)
 		 do_launch = true,
 		 redownload = false;
 
+	auto warframe_exe = WARFRAME_64_EXE;
+
 	for (int i = 1; i < argc; ++i)
 	{
 		std::string arg = argv[i];
@@ -109,6 +114,8 @@ int main(int argc, char** argv)
 			do_launch = false;
 		if (arg == "-R")
 			redownload = true;
+		if (arg == "-32")
+			warframe_exe = WARFRAME_EXE;
 	}
 
 	std::cout << WARFRAME_LOGO() << std::endl;
@@ -198,15 +205,9 @@ int main(int argc, char** argv)
 
     if (diff.empty())
     {
-		if (do_launch)
-		{
-			if (do_update)
-				std::cout << "Done" << std::endl << "No updates found, launching Warframe..." << std::endl;
-			launch("..\\Warframe.x64.exe -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -fullscreen:0 -registry:Steam");
-			return 0;
-		}
+		std::cout << "Done, no updates found." << std::endl;
     }
-    else
+	else
     {
 		std::cout << "Done" << std::endl << diff.size() << " files need to be updated." << std::endl;
 
@@ -347,25 +348,23 @@ int main(int argc, char** argv)
         else
         {
             std::cout << "Updated files retrieved, running internal patcher...";
-            launch("..\\Warframe.x64.exe -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -applet:/EE/Types/Framework/ContentUpdate -registry:Steam");
+            launch("..\\" + warframe_exe + " -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -applet:/EE/Types/Framework/ContentUpdate -registry:Steam");
 			std::cout << " Done." << std::endl;
 
 			if (do_cache)
 			{
 				std::cout << std::endl << "Optimizing Cache...";
-				launch("..\\Warframe.x64.exe -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -applet:/EE/Types/Framework/CacheDefraggerAsync /Tools/CachePlan.txt -registry:Steam");
+				launch("..\\" + warframe_exe + " -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -applet:/EE/Types/Framework/CacheDefraggerAsync /Tools/CachePlan.txt -registry:Steam");
 				std::wcout << " Done." << std::endl;
 			}
-
-			if (do_launch)
-			{
-				std::cout << " Done" << std::endl << "No updates found, launching Warframe..." << std::endl;
-				launch("..\\Warframe.x64.exe -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -fullscreen:0 -registry:Steam");
-			}
-            
-            return 0;
         }
     }
+
+	if (do_launch)
+	{
+		std::cout << " Done" << std::endl << "No updates found, launching Warframe..." << std::endl;
+		launch("..\\" + warframe_exe + " -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -fullscreen:0 -registry:Steam");
+	}
 
     return 0;
 }
