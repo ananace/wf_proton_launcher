@@ -94,13 +94,14 @@ int launch(const std::string& command);
 
 std::string WARFRAME_LOGO();
 
+bool do_update = true,
+     do_cache = false,
+     do_launch = true,
+     redownload = false,
+     verbose = false;
+
 int main(int argc, char** argv)
 {
-	bool do_update = true,
-		 do_cache = false,
-		 do_launch = true,
-		 redownload = false;
-
 	auto warframe_exe = WARFRAME_64_EXE;
 
 	for (int i = 1; i < argc; ++i)
@@ -114,6 +115,8 @@ int main(int argc, char** argv)
 			do_launch = false;
 		if (arg == "-R")
 			redownload = true;
+		if (arg == "-v")
+			verbose = true;
 		if (arg == "-32")
 			warframe_exe = WARFRAME_EXE;
 	}
@@ -361,10 +364,7 @@ int main(int argc, char** argv)
     }
 
 	if (do_launch)
-	{
-		std::cout << " Done" << std::endl << "No updates found, launching Warframe..." << std::endl;
 		launch("..\\" + warframe_exe + " -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -fullscreen:0 -registry:Steam");
-	}
 
     return 0;
 }
@@ -596,6 +596,8 @@ void addClient(CURLM *cm, const Hashlist::RemoteHash& file)
 
 int launch(const std::string& command)
 {
+	if (verbose)
+		std::cout << "> " << command << std::endl;
     return system((command).c_str());
 }
 
