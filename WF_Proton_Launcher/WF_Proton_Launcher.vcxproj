@@ -172,6 +172,7 @@
     <ClCompile Include="lzma\LzmaDec.c" />
     <ClCompile Include="lzma\LzmaEnc.c" />
     <ClCompile Include="lzma\LzmaLib.c" />
+    <ClCompile Include="lzma\Threads.c" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MD5.cpp" />
     <ClCompile Include="stdafx.cpp">
