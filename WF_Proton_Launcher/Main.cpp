@@ -367,18 +367,18 @@ int main(int argc, char** argv)
             std::cout << "Updated files retrieved, running internal patcher...";
             launch("..\\" + warframe_exe + " -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -applet:/EE/Types/Framework/ContentUpdate -registry:Steam");
 			std::cout << " Done." << std::endl;
-
-			if (do_cache)
-			{
-				std::cout << std::endl << "Optimizing Cache...";
-				launch("..\\" + warframe_exe + " -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -applet:/EE/Types/Framework/CacheDefraggerAsync /Tools/CachePlan.txt -registry:Steam");
-				std::wcout << " Done." << std::endl;
-			}
         }
     }
 
+	if (do_cache)
+	{
+		std::cout << std::endl << "Optimizing Cache...";
+		launch("..\\" + warframe_exe + " -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -applet:/EE/Types/Framework/CacheDefraggerAsync /Tools/CachePlan.txt -registry:Steam");
+		std::wcout << " Done." << std::endl;
+	}
+
 	if (do_launch)
-		launch("..\\" + warframe_exe + " -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -fullscreen:0 -registry:Steam");
+		launch("..\\" + warframe_exe + " -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -fullscreen:0 -registry:Steam");
 
     return 0;
 }
