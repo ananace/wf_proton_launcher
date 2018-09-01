@@ -119,6 +119,20 @@ int main(int argc, char** argv)
 			verbose = true;
 		if (arg == "-32")
 			warframe_exe = WARFRAME_EXE;
+		if (arg == "-h")
+		{
+			std::cout << "Usage: " << argv[0] << " [-U -c -L -R -v -32 -h]" << std::endl << std::endl
+				<< "Parameters;" << std::endl
+				<< "  -U  Skip updating" << std::endl
+				<< "  -c  Optimize cache before launch" << std::endl
+				<< "  -L  Skip launching the game" << std::endl
+				<< "  -R  Redownload the entire game" << std::endl
+				<< "  -v  Print more verbose output" << std::endl
+				<< "  -32 Launch the 32-bit binary instead of the 64-bit one" << std::endl
+				<< "  -h  Get this text" << std::endl;
+
+			return 0;
+		}
 	}
 
 	std::cout << WARFRAME_LOGO() << std::endl;
