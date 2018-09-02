@@ -608,11 +608,43 @@ void addClient(CURLM *cm, const Hashlist::RemoteHash& file)
 	curl_multi_add_handle(cm, curl);
 }
 
+class FSRename
+{
+public:
+	FSRename(const fs::path& orig, const fs::path& changed)
+		: mOrigPath(orig)
+		, mChangedPath(changed)
+		, mRenamed(false)
+	{
+		if (fs::is_regular_file(orig))
+		{
+			fs::rename(orig, changed);
+			mRenamed = true;
+		}
+	}
+	~FSRename()
+	{
+		if (mRenamed)
+		{
+			if (fs::is_regular_file(mOrigPath))
+				fs::remove(mOrigPath);
+
+			fs::rename(mChangedPath, mOrigPath);
+		}
+	}
+
+private:
+	fs::path mOrigPath, mChangedPath;
+	bool mRenamed;
+};
+
 int launch(const std::string& command)
 {
 	if (verbose)
 		std::cout << "> " << command << std::endl;
-    return system((command).c_str());
+
+	FSRename launcher_keeper("Launcher.exe", "Launcher.exe.custom");
+	return system((command).c_str());
 }
 
 std::string WARFRAME_LOGO()
