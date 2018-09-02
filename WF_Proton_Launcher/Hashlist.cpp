@@ -7,6 +7,9 @@
 #include <atomic>
 #include <thread>
 
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+
 static const int MD5_BLOCKSIZE = 1024 * 1024;
 
 Hashlist::Hashlist()
@@ -91,6 +94,13 @@ void Hashlist::hashLocal()
 		if (mLocalHashes.count(filename) > 0)
 			continue;
 
+		if (filename.substr(0, 15) == "/Cache.Windows/")
+		{
+			if (fs::is_regular_file("../" + filename))
+				mLocalHashes[filename] = kv.second.Hash;
+			continue;
+		}
+
 		workQueue.dispatch([filename, &ret_store, this] {
 			FILE* fp;
 			fopen_s(&fp, (".." + filename).c_str(), "rb");
@@ -164,7 +174,10 @@ std::vector<std::string> Hashlist::getDiffering() const
 		if (it->second.TargetFile == "/Tools/Launcher.exe")
 			continue;
 
-		if ((mLocalHashes.count(it->first) <= 0) || (mLocalHashes.at(it->first) != it->second.Hash))
+		if (mLocalHashes.count(it->first) <= 0)
+			ret.push_back(it->first);
+		else if (mLocalHashes.at(it->first) != it->second.Hash
+			&& it->second.TargetFile.substr(0, 15) != "/Cache.Windows/")
 			ret.push_back(it->first);
 	}
 
