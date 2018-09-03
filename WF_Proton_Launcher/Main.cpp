@@ -120,7 +120,7 @@ int main(int argc, char** argv)
 			verbose = true;
 		if (arg == "-32")
 			warframe_exe = WARFRAME_EXE;
-		if (arg.substr(0,9) == "-registry:")
+		if (arg.substr(0,10) == "-registry:")
                         registry_option = arg;
 		if (arg == "-h")
 		{
