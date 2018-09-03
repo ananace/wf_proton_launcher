@@ -2,6 +2,7 @@
 #include "Hashlist.hpp"
 #include "MD5.hpp"
 #include <iostream>
+#include <filesystem>
 #include <fstream>
 #include <cassert>
 
@@ -97,6 +98,7 @@ bool do_update = true,
      do_cache = false,
      do_launch = true,
      redownload = false,
+     firstrun = false,
      verbose = false;
 
 std::string registry_option;
@@ -120,6 +122,8 @@ int main(int argc, char** argv)
 			verbose = true;
 		if (arg == "-32")
 			warframe_exe = WARFRAME_EXE;
+		if (arg == "-F")
+			firstrun = true;
 		if (arg.substr(0,10) == "-registry:")
                         registry_option = arg;
 		if (arg == "-h")
@@ -146,6 +150,48 @@ int main(int argc, char** argv)
 
 	Hashlist hashes;
 	std::vector<std::string> diff;
+
+	if (firstrun) {
+		std::cout << std::endl << "Installing Direct X...";
+
+		FILE* fp;
+		fopen_s(&fp, "directx_Jun2010_redist.exe", "wb");
+		if (!fp)
+		{
+			std::wcout << "Failed to create file on disk." << std::endl;
+			return 1;
+		}
+		CURL *curl = curl_easy_init();
+
+		FileWrapper wrap{ fp, {} };
+		curl_easy_setopt(curl, CURLOPT_URL, "https://download.microsoft.com/download/8/4/A/84A35BF1-DAFE-4AE8-82AF-AD2AE20B6B14/directx_Jun2010_redist.exe");
+		curl_easy_setopt(curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Warframe_on_Proton)");
+		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &wrap);
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeFile);
+
+		CURLcode res;
+		res = curl_easy_perform(curl);
+
+		if (res != CURLE_OK) {
+			std::wcout << "Failed to download Direct X." << std::endl;
+			return 1;
+		}
+
+		curl_easy_cleanup(curl);
+		fclose(fp);
+
+		launch("directx_Jun2010_redist.exe /Q /T:C:\\dx9temp");
+		launch("C:\\dx9temp/DXSETUP.exe /silent");
+		std::wcout << " Done." << std::endl;
+
+		std::cout << "Adding XAudio2_7 registry override." << std::endl;
+		launch("REG ADD HKCU\\Software\\Wine\\DllOverrides /v xaudio2_7 /t REG_SZ /d native /f");
+
+		fs::remove_all("C:\\dx9temp");
+		fs::remove("directx_Jun2010_redist.exe");
+		std::wcout << " Done." << std::endl;
+
+	}
 
 	if (do_update)
 	{
@@ -622,7 +668,7 @@ public:
 	{
 		if (fs::is_regular_file(orig))
 		{
-			fs::rename(orig, changed);
+			rename(orig.generic_string().c_str(), changed.generic_string().c_str());
 			mRenamed = true;
 		}
 	}
@@ -633,7 +679,7 @@ public:
 			if (fs::is_regular_file(mOrigPath))
 				fs::remove(mOrigPath);
 
-			fs::rename(mChangedPath, mOrigPath);
+			rename(mChangedPath.generic_string().c_str(), mOrigPath.generic_string().c_str());
 		}
 	}
 
