@@ -26,7 +26,6 @@ namespace fs = std::experimental::filesystem;
 #endif
 
 const std::string INDEX_HOST = "origin.warframe.com";
-const std::string CONTENT_HOST = "content.warframe.com";
 
 const std::string INDEX_PATH = "/index.txt.lzma";
 
@@ -100,6 +99,8 @@ bool do_update = true,
      redownload = false,
      verbose = false;
 
+std::string registry_option;
+
 int main(int argc, char** argv)
 {
 	auto warframe_exe = WARFRAME_64_EXE;
@@ -119,6 +120,8 @@ int main(int argc, char** argv)
 			verbose = true;
 		if (arg == "-32")
 			warframe_exe = WARFRAME_EXE;
+		if (arg.substr(0,10) == "-registry:")
+                        registry_option = arg;
 		if (arg == "-h")
 		{
 			std::cout << "Usage: " << argv[0] << " [-U -c -L -R -v -32 -h]" << std::endl << std::endl
@@ -189,6 +192,7 @@ int main(int argc, char** argv)
 		hashes = std::move(Hashlist(data));
 
 		std::cout << "Verifying local game state... ";
+
 		if (!redownload)
 		{
 			if (fs::is_regular_file({ "./local_index.txt" }))
@@ -365,20 +369,20 @@ int main(int argc, char** argv)
         else
         {
             std::cout << "Updated files retrieved, running internal patcher...";
-            launch("..\\" + warframe_exe + " -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -applet:/EE/Types/Framework/ContentUpdate -registry:Steam");
-			std::cout << " Done." << std::endl;
+            launch("..\\" + warframe_exe + " -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -applet:/EE/Types/Framework/ContentUpdate " + registry_option);
+            std::cout << " Done." << std::endl;
         }
     }
 
 	if (do_cache)
 	{
 		std::cout << std::endl << "Optimizing Cache...";
-		launch("..\\" + warframe_exe + " -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -applet:/EE/Types/Framework/CacheDefraggerAsync /Tools/CachePlan.txt -registry:Steam");
+		launch("..\\" + warframe_exe + " -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -applet:/EE/Types/Framework/CacheDefraggerAsync /Tools/CachePlan.txt " + registry_option);
 		std::wcout << " Done." << std::endl;
 	}
 
 	if (do_launch)
-		launch("..\\" + warframe_exe + " -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -fullscreen:0 -registry:Steam");
+		launch("..\\" + warframe_exe + " -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -fullscreen:0 " + registry_option);
 
     return 0;
 }
@@ -580,7 +584,7 @@ void decodeLzmaFile(FILE* src, FILE* dst)
 
 void addClient(CURLM *cm, const Hashlist::RemoteHash& file)
 {
-	std::string url = "http://" + CONTENT_HOST + file.SourceFile;
+	std::string url = "http://" + INDEX_HOST + file.SourceFile;
 	fs::path target = ".." + file.TargetFile;
 	fs::create_directories(target.parent_path());
 

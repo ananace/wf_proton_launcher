@@ -94,7 +94,7 @@ void Hashlist::hashLocal()
 		if (mLocalHashes.count(filename) > 0)
 			continue;
 
-		if (filename.substr(0, 15) == "/Cache.Windows/")
+		if (filename.substr(0, 15) == "/Cache.Windows/" || filename.substr(0, 13) == "/Launcher.exe")
 		{
 			if (fs::is_regular_file("../" + filename))
 				mLocalHashes[filename] = kv.second.Hash;
