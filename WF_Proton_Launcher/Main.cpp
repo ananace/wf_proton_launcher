@@ -187,7 +187,8 @@ int main(int argc, char** argv)
 		std::cout << "Adding XAudio2_7 registry override." << std::endl;
 		launch("REG ADD HKCU\\Software\\Wine\\DllOverrides /v xaudio2_7 /t REG_SZ /d native /f");
 
-		std::uintmax_t n = fs::remove_all("C:\\dx9temp");
+		fs::remove_all("C:\\dx9temp");
+		fs::remove("directx_Jun2010_redist.exe");
 		std::wcout << " Done." << std::endl;
 
 	}
