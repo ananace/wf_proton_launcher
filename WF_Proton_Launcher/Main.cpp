@@ -668,7 +668,7 @@ public:
 	{
 		if (fs::is_regular_file(orig))
 		{
-			fs::rename(orig, changed);
+			rename(orig.generic_string().c_str(), changed.generic_string().c_str());
 			mRenamed = true;
 		}
 	}
@@ -679,7 +679,7 @@ public:
 			if (fs::is_regular_file(mOrigPath))
 				fs::remove(mOrigPath);
 
-			fs::rename(mChangedPath, mOrigPath);
+			rename(mChangedPath.generic_string().c_str(), mOrigPath.generic_string().c_str());
 		}
 	}
 
