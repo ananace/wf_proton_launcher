@@ -2,6 +2,7 @@
 #include "Hashlist.hpp"
 #include "MD5.hpp"
 #include <iostream>
+#include <filesystem>
 #include <fstream>
 #include <cassert>
 
@@ -158,11 +159,12 @@ int main(int argc, char** argv)
 		if (!fp)
 		{
 			std::wcout << "Failed to create file on disk." << std::endl;
+			return 1;
 		}
 		CURL *curl = curl_easy_init();
 
 		FileWrapper wrap{ fp, {} };
-		curl_easy_setopt(curl, CURLOPT_URL, ("https://download.microsoft.com/download/8/4/A/84A35BF1-DAFE-4AE8-82AF-AD2AE20B6B14/directx_Jun2010_redist.exe"));
+		curl_easy_setopt(curl, CURLOPT_URL, "https://download.microsoft.com/download/8/4/A/84A35BF1-DAFE-4AE8-82AF-AD2AE20B6B14/directx_Jun2010_redist.exe");
 		curl_easy_setopt(curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Warframe_on_Proton)");
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &wrap);
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeFile);
@@ -184,6 +186,8 @@ int main(int argc, char** argv)
 
 		std::cout << "Adding XAudio2_7 registry override." << std::endl;
 		launch("REG ADD HKCU\\Software\\Wine\\DllOverrides /v xaudio2_7 /t REG_SZ /d native /f");
+
+		std::uintmax_t n = fs::remove_all("C:\\dx9temp");
 		std::wcout << " Done." << std::endl;
 
 	}
