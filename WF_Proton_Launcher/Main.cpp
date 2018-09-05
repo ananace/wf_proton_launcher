@@ -128,8 +128,9 @@ int main(int argc, char** argv)
                         registry_option = arg;
 		if (arg == "-h")
 		{
-			std::cout << "Usage: " << argv[0] << " [-U -c -L -R -v -32 -h]" << std::endl << std::endl
+			std::cout << "Usage: " << argv[0] << " [-F -U -c -L -R -v -32 -h]" << std::endl << std::endl
 				<< "Parameters;" << std::endl
+				<< "  -F  Set up first run Wine requirements" << std::endl
 				<< "  -U  Skip updating" << std::endl
 				<< "  -c  Optimize cache before launch" << std::endl
 				<< "  -L  Skip launching the game" << std::endl
