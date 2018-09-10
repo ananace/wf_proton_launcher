@@ -105,6 +105,8 @@ std::string registry_option;
 
 std::string fullscreen_option = " -fullscreen:0 ";
 
+std::string language_option = " -language:en ";
+
 int main(int argc, char** argv)
 {
 	auto warframe_exe = WARFRAME_64_EXE;
@@ -130,6 +132,8 @@ int main(int argc, char** argv)
                         registry_option = arg;
 		if (arg == "-fullscreen")
 			fullscreen_option = " -fullscreen:1 ";
+		if (arg.substr(0, 10) == "-language:")
+			language_option = " " + arg + " ";
 		if (arg == "-h")
 		{
 			std::cout << "Usage: " << argv[0] << " [-F -U -c -L -R -v -32 -h]" << std::endl << std::endl
@@ -142,6 +146,8 @@ int main(int argc, char** argv)
 				<< "  -v  Print more verbose output" << std::endl
 				<< "  -32 Launch the 32-bit binary instead of the 64-bit one" << std::endl
 				<< "  -fullscreen Launch the game in full-screen" << std::endl
+				<< "  -language:xx changes the game's language. Default: -language:en" << std::endl
+				<< "               supported languages: de,en,es,fr,it,ja,ko,pl,pt,ru,tc,uk,zh" << std::endl
 				<< "  -h  Get this text" << std::endl;
 
 			return 0;
@@ -421,7 +427,7 @@ int main(int argc, char** argv)
         else
         {
             std::cout << "Updated files retrieved, running internal patcher...";
-            launch("..\\" + warframe_exe + " -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -applet:/EE/Types/Framework/ContentUpdate " + registry_option);
+            launch("..\\" + warframe_exe + " -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public " + language_option + " -applet:/EE/Types/Framework/ContentUpdate " + registry_option);
             std::cout << " Done." << std::endl;
         }
     }
@@ -429,12 +435,12 @@ int main(int argc, char** argv)
 	if (do_cache)
 	{
 		std::cout << std::endl << "Optimizing Cache...";
-		launch("..\\" + warframe_exe + " -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -applet:/EE/Types/Framework/CacheDefraggerAsync /Tools/CachePlan.txt " + registry_option);
+		launch("..\\" + warframe_exe + " -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public " + language_option + " -applet:/EE/Types/Framework/CacheDefraggerAsync /Tools/CachePlan.txt " + registry_option);
 		std::wcout << " Done." << std::endl;
 	}
 
 	if (do_launch)
-		launch("..\\" + warframe_exe + " -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en" + fullscreen_option + registry_option);
+		launch("..\\" + warframe_exe + " -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public " + language_option + fullscreen_option + registry_option);
 
     return 0;
 }
