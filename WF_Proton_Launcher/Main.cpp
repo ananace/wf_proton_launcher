@@ -103,6 +103,8 @@ bool do_update = true,
 
 std::string registry_option;
 
+std::string fullscreen_option = " -fullscreen:0 ";
+
 int main(int argc, char** argv)
 {
 	auto warframe_exe = WARFRAME_64_EXE;
@@ -126,6 +128,8 @@ int main(int argc, char** argv)
 			firstrun = true;
 		if (arg.substr(0,10) == "-registry:")
                         registry_option = arg;
+		if (arg == "-fullscreen")
+			fullscreen_option = " -fullscreen:1 ";
 		if (arg == "-h")
 		{
 			std::cout << "Usage: " << argv[0] << " [-F -U -c -L -R -v -32 -h]" << std::endl << std::endl
@@ -137,6 +141,7 @@ int main(int argc, char** argv)
 				<< "  -R  Redownload the entire game" << std::endl
 				<< "  -v  Print more verbose output" << std::endl
 				<< "  -32 Launch the 32-bit binary instead of the 64-bit one" << std::endl
+				<< "  -fullscreen Launching the game in full-screen" << std::endl
 				<< "  -h  Get this text" << std::endl;
 
 			return 0;
@@ -429,7 +434,7 @@ int main(int argc, char** argv)
 	}
 
 	if (do_launch)
-		launch("..\\" + warframe_exe + " -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en -fullscreen:0 " + registry_option);
+		launch("..\\" + warframe_exe + " -silent -log:/Preprocessing.log -dx10:1 -dx11:1 -threadedworker:1 -cluster:public -language:en" + fullscreen_option + registry_option);
 
     return 0;
 }
